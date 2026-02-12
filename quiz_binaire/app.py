@@ -312,10 +312,13 @@ def exercice(n):
         # Sauvegarder les réponses en session
         reponses = session.get("reponses", {})
         for key, value in request.form.items():
-            reponses[key] = value
+            if key != "direction":
+                reponses[key] = value
         session["reponses"] = reponses
 
-        if n < 3:
+        if request.form.get("direction") == "prev" and n > 1:
+            return redirect(url_for("exercice", n=n - 1))
+        elif n < 3:
             return redirect(url_for("exercice", n=n + 1))
         else:
             return redirect(url_for("confirmation"))
