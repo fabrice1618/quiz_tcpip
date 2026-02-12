@@ -1,0 +1,18 @@
+services:
+  quiz-binaire:
+    build: .
+    container_name: quiz-binaire
+    volumes:
+      - ./quiz_binaire:/app
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  quiz-reseau:
+    build: .
+    container_name: quiz-reseau
+    volumes:
+      - ./quiz_reseau:/app
+    ports:
+      - "5001:5000"
+    restart: unless-stopped
