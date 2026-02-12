@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 class="mb-3">Exercice 3 — Opérations logiques</h3>
+<p class="text-muted">Pour chaque opération, complétez la table de vérité, la grille de Karnaugh et l'opération bit à bit.</p>
+
+<form method="POST" action="{{ url_for('exercice', n=3) }}">
+
+    {# ===== NOT ===== #}
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <div class="card card-operation">
+                <div class="card-header bg-not">NOT</div>
+                <div class="card-body">
+                    <div class="row">
+                        {# Table de vérité NOT #}
+                        <div class="col-sm-6 mb-3">
+                            <h6>Table de vérité</h6>
+                            <table class="table table-bordered table-truth table-sm">
+                                <thead><tr><th>a</th><th>NOT a</th></tr></thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="given">0</td>
+                                        <td><input type="text" name="ex3_tt_not_0" value="{{ reponses.get('ex3_tt_not_0', '') }}" pattern="[01]"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="given">1</td>
+                                        <td><input type="text" name="ex3_tt_not_1" value="{{ reponses.get('ex3_tt_not_1', '') }}" pattern="[01]"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        {# Opération bit à bit NOT #}
+                        <div class="col-sm-6 mb-3">
+                            <h6>Bit à bit</h6>
+                            <div class="bw-operation">
+                                <code>NOT {{ ex3_b }}</code><br>
+                                <input type="text" name="ex3_bw_not" class="input-bw"
+                                   value="{{ reponses.get('ex3_bw_not', '') }}"
+                                   pattern="[01]{4} [01]{4}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ===== Macro pour les opérations à 2 entrées ===== #}
+    {% set ops = [
+        ('and', 'AND', 'bg-and'),
+        ('or', 'OR', 'bg-or'),
+        ('xor', 'XOR', 'bg-xor'),
+        ('nand', 'NAND', 'bg-nand'),
+        ('nor', 'NOR', 'bg-nor'),
+    ] %}
+
+    <div class="row">
+        {% for op_id, op_name, bg_class in ops %}
+        <div class="col-md-6">
+            <div class="card card-operation">
+                <div class="card-header {{ bg_class }}">{{ op_name }}</div>
+                <div class="card-body">
+                    <div class="row">
+                        {# Table de vérité #}
+                        <div class="col-sm-4 mb-3">
+                            <h6>Table de vérité</h6>
+                            <table class="table table-bordered table-truth table-sm">
+                                <thead><tr><th>a</th><th>b</th><th>S</th></tr></thead>
+                                <tbody>
+                                    {% for a, b in [('0','0'), ('0','1'), ('1','0'), ('1','1')] %}
+                                    <tr>
+                                        <td class="given">{{ a }}</td>
+                                        <td class="given">{{ b }}</td>
+                                        <td><input type="text" name="ex3_tt_{{ op_id }}_{{ a }}{{ b }}" value="{{ reponses.get('ex3_tt_%s_%s%s' % (op_id, a, b), '') }}" pattern="[01]"></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {# Grille de Karnaugh 2×2 #}
+                        <div class="col-sm-4 mb-3">
+                            <h6>Karnaugh</h6>
+                            <table class="table table-bordered table-karnaugh table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>a \ b</th>
+                                        <th>0</th>
+                                        <th>1</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for a in ['0', '1'] %}
+                                    <tr>
+                                        <td class="given">{{ a }}</td>
+                                        {% for b in ['0', '1'] %}
+                                        <td><input type="text" name="ex3_kn_{{ op_id }}_{{ a }}{{ b }}" value="{{ reponses.get('ex3_kn_%s_%s%s' % (op_id, a, b), '') }}" pattern="[01]"></td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {# Opération bit à bit #}
+                        <div class="col-sm-4 mb-3">
+                            <h6>Bit à bit</h6>
+                            <div class="bw-operation">
+                                <code>  {{ ex3_a }}</code><br>
+                                <code>{{ op_name }} {{ ex3_b }}</code><br>
+                                <input type="text" name="ex3_bw_{{ op_id }}" class="input-bw"
+                                       value="{{ reponses.get('ex3_bw_%s' % op_id, '') }}"
+                                       pattern="[01]{4} [01]{4}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="nav-buttons">
+        <a href="{{ url_for('exercice', n=2) }}" class="btn btn-outline-secondary">← Précédent</a>
+        <button type="submit" class="btn btn-success">Valider le test ✓</button>
+    </div>
+</form>
+{% endblock %}
