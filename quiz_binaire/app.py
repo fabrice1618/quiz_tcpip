@@ -78,7 +78,8 @@ def construire_corrections(ex2_data, ex3_operands):
     for i in range(16):
         c[f"ex1_bin_{i}"] = ("bin", i)
         c[f"ex1_hex_{i}"] = ("hex", i)
-        c[f"ex1_bcd_{i}"] = ("bcd", dec_to_bcd(i))
+        if i < 10:
+            c[f"ex1_bcd_{i}"] = ("bcd", dec_to_bcd(i))
 
     # --- Exercice 2 : valeurs aléatoires ---
     for row, given_col, dec_val in ex2_data:

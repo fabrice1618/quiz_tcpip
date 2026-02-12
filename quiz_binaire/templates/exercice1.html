@@ -30,9 +30,11 @@
                                pattern="[0-9A-Fa-f]+">
                     </td>
                     <td>
+                        {% if i < 10 %}
                         <input type="text" name="ex1_bcd_{{ i }}" class="input-bcd"
                                value="{{ reponses.get('ex1_bcd_%d' % i, '') }}"
                                pattern="[01 ]+">
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
