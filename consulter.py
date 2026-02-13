@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import re
+import sqlite3
 import sys
 
 
@@ -169,15 +170,16 @@ def norm_bcd(s):
 
 def charger_soumission(quiz, code):
     base = os.path.dirname(os.path.abspath(__file__))
-    path = os.path.join(base, f"quiz_{quiz}", "resultats.json")
-    if not os.path.exists(path):
-        print(f"Fichier introuvable : {path}", file=sys.stderr)
+    db_path = os.path.join(base, f"quiz_{quiz}", "resultats.db")
+    if not os.path.exists(db_path):
+        print(f"Base introuvable : {db_path}", file=sys.stderr)
         sys.exit(1)
-    with open(path, "r", encoding="utf-8") as f:
-        resultats = json.load(f)
-    for r in resultats:
-        if r["code"] == code:
-            return r
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT donnees FROM resultats WHERE code=?", (code,)).fetchone()
+    conn.close()
+    if row:
+        return json.loads(row["donnees"])
     return None
 
 

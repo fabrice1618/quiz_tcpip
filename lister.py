@@ -3,21 +3,25 @@
 
 import json
 import os
+import sqlite3
 import sys
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 
 QUIZ = [
-    ("binaire", os.path.join(BASE, "quiz_binaire", "resultats.json")),
-    ("reseau",  os.path.join(BASE, "quiz_reseau",  "resultats.json")),
+    ("binaire", os.path.join(BASE, "quiz_binaire", "resultats.db")),
+    ("reseau",  os.path.join(BASE, "quiz_reseau",  "resultats.db")),
 ]
 
 
-def charger(path):
-    if not os.path.exists(path):
+def charger(db_path):
+    if not os.path.exists(db_path):
         return []
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute("SELECT donnees FROM resultats ORDER BY date").fetchall()
+    conn.close()
+    return [json.loads(row["donnees"]) for row in rows]
 
 
 def main():

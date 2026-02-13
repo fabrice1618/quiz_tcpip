@@ -1,6 +1,7 @@
 import json
 import os
 import random
+import sqlite3
 from datetime import datetime
 
 from flask import Flask, render_template, request, session, redirect, url_for
@@ -165,24 +166,51 @@ def corriger_ex2(reponses):
     return score, total
 
 
-RESULTATS_JSON = os.path.join(os.path.dirname(__file__), "resultats.json")
+DB_PATH = os.path.join(os.path.dirname(__file__), "resultats.db")
+
+
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA busy_timeout=5000")
+    return conn
+
+
+def init_db():
+    conn = get_db()
+    conn.execute("""CREATE TABLE IF NOT EXISTS resultats (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT UNIQUE NOT NULL,
+        nom TEXT NOT NULL,
+        prenom TEXT NOT NULL,
+        date TEXT NOT NULL,
+        score_total_correct INTEGER,
+        score_total_total INTEGER,
+        donnees TEXT NOT NULL
+    )""")
+    conn.commit()
+    conn.close()
+
+
+init_db()
 
 
 def charger_resultats():
-    """Charge les résultats existants depuis le fichier JSON."""
-    if os.path.exists(RESULTATS_JSON):
-        with open(RESULTATS_JSON, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return []
+    """Charge tous les résultats depuis la base SQLite."""
+    conn = get_db()
+    rows = conn.execute("SELECT donnees FROM resultats ORDER BY date").fetchall()
+    conn.close()
+    return [json.loads(row["donnees"]) for row in rows]
 
 
-def generer_code():
+def generer_code(conn):
     """Génère un code unique de 6 chiffres."""
-    existants = {r["code"] for r in charger_resultats()}
-    while True:
+    for _ in range(100):
         code = f"{random.randint(0, 999999):06d}"
-        if code not in existants:
+        if conn.execute("SELECT 1 FROM resultats WHERE code=?", (code,)).fetchone() is None:
             return code
+    raise RuntimeError("Impossible de générer un code unique")
 
 
 def structurer_resultat(reponses, scores):
@@ -236,9 +264,9 @@ def structurer_resultat(reponses, scores):
 
 
 def sauvegarder_resultat(nom, prenom, reponses, scores):
-    """Sauvegarde une soumission dans le fichier JSON. Retourne le code généré."""
-    resultats = charger_resultats()
-    code = generer_code()
+    """Sauvegarde une soumission dans la base SQLite. Retourne le code généré."""
+    conn = get_db()
+    code = generer_code(conn)
     entree = {
         "code": code,
         "nom": nom,
@@ -246,9 +274,13 @@ def sauvegarder_resultat(nom, prenom, reponses, scores):
         "date": datetime.now().isoformat(timespec="seconds"),
     }
     entree.update(structurer_resultat(reponses, scores))
-    resultats.append(entree)
-    with open(RESULTATS_JSON, "w", encoding="utf-8") as f:
-        json.dump(resultats, f, ensure_ascii=False, indent=2)
+    st = entree["score_total"]
+    conn.execute(
+        "INSERT INTO resultats (code, nom, prenom, date, score_total_correct, score_total_total, donnees) VALUES (?,?,?,?,?,?,?)",
+        (code, nom, prenom, entree["date"], st["correct"], st["total"], json.dumps(entree, ensure_ascii=False)),
+    )
+    conn.commit()
+    conn.close()
     return code
 
 
