@@ -1,0 +1,95 @@
+/* Largeurs adaptées au contenu */
+input.input-bin {
+    width: 90px;
+}
+
+input.input-hex {
+    width: 45px;
+}
+
+input.input-dec {
+    width: 55px;
+}
+
+input.input-bcd {
+    width: 110px;
+}
+
+input.input-bw {
+    width: 110px;
+}
+
+/* Carte pour les opérations logiques */
+.card-operation {
+    margin-bottom: 1rem;
+}
+
+.card-operation .card-header {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: white;
+}
+
+.card-operation .card-header.bg-not    { background-color: #6c757d; }
+.card-operation .card-header.bg-and    { background-color: #0d6efd; }
+.card-operation .card-header.bg-or     { background-color: #198754; }
+.card-operation .card-header.bg-xor    { background-color: #dc3545; }
+.card-operation .card-header.bg-nand   { background-color: #6610f2; }
+.card-operation .card-header.bg-nor    { background-color: #fd7e14; }
+
+/* Tables de vérité et Karnaugh */
+.table-truth,
+.table-karnaugh {
+    font-size: 0.9rem;
+}
+
+.table-truth td,
+.table-karnaugh td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-truth input,
+.table-karnaugh input {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    padding: 2px 4px;
+}
+
+/* Opérations bit à bit — alignement à droite */
+.bw-operation {
+    font-family: "Courier New", Courier, monospace;
+    text-align: right;
+    display: inline-block;
+}
+
+.bw-operation code {
+    font-size: 0.95rem;
+    white-space: pre;
+}
+
+.bw-operation input.input-bw {
+    text-align: right;
+    font-family: "Courier New", Courier, monospace;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    input.input-bin {
+        width: 75px;
+    }
+
+    input.input-bcd {
+        width: 90px;
+    }
+
+    input.input-bw {
+        width: 90px;
+    }
+
+    .card-operation .row > [class*="col-md"] {
+        margin-bottom: 0.5rem;
+    }
+}

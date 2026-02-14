@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow-sm mx-auto mt-5" style="max-width: 500px;">
+    <div class="card-body text-center py-5">
+        <div class="spinner-border text-primary mb-4" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Chargement...</span>
+        </div>
+        <h4 class="mb-3">Le test n'est pas encore ouvert</h4>
+        <p class="text-muted">Veuillez patienter, <strong>{{ prenom }} {{ nom }}</strong>.<br>
+        Le test commencera automatiquement lorsque le professeur l'ouvrira.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    var statusUrl = "{{ url_for(quiz_id ~ '.attente_status') }}";
+    var exerciceUrl = "{{ url_for(quiz_id ~ '.exercice', n=1) }}";
+
+    function poll() {
+        fetch(statusUrl)
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.ouvert) {
+                    window.location.href = exerciceUrl;
+                }
+            })
+            .catch(function() {});
+    }
+
+    setInterval(poll, 3000);
+})();
+</script>
+{% endblock %}

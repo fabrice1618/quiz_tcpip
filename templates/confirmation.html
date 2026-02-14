@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card shadow-sm mx-auto mt-4" style="max-width: 500px;">
+    <div class="card-body text-center">
+        <h2 class="text-success mb-4">Test soumis avec succès</h2>
+        <p class="lead">Merci <strong>{{ prenom }} {{ nom }}</strong>,<br>
+        votre test a bien été enregistré.</p>
+        <hr>
+        <p class="mb-1">Votre code de dépôt :</p>
+        <p class="display-4 font-monospace fw-bold text-primary">{{ code }}</p>
+        <p class="text-muted small">Conservez ce code comme preuve de soumission.</p>
+    </div>
+</div>
+{% endblock %}

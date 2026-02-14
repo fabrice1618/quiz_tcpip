@@ -170,13 +170,16 @@ def norm_bcd(s):
 
 def charger_soumission(quiz, code):
     base = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(base, f"quiz_{quiz}", "resultats.db")
+    db_path = os.path.join(base, "data", "resultats.db")
     if not os.path.exists(db_path):
         print(f"Base introuvable : {db_path}", file=sys.stderr)
         sys.exit(1)
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
-    row = conn.execute("SELECT donnees FROM resultats WHERE code=?", (code,)).fetchone()
+    row = conn.execute(
+        "SELECT donnees FROM resultats WHERE quiz_id=? AND code=?",
+        (quiz, code),
+    ).fetchone()
     conn.close()
     if row:
         return json.loads(row["donnees"])
@@ -469,7 +472,7 @@ def afficher_reseau_ex2(r):
             norm = normaliser_ip(rep_ip)
             if norm is not None:
                 octets = parse_ip(rep_ip)
-                if (octets[0] == 192 and octets[1] == 168 and octets[2] == 0
+                if octets is not None and (octets[0] == 192 and octets[1] == 168 and octets[2] == 0
                         and lo <= octets[3] <= hi
                         and norm not in exclusions):
                     ok_ip = True
@@ -502,7 +505,7 @@ def main():
     if r is None:
         print(
             f"Aucune soumission trouvée pour le code {args.code} "
-            f"dans quiz_{args.quiz}.",
+            f"dans le quiz {args.quiz}.",
             file=sys.stderr,
         )
         sys.exit(1)

@@ -1,0 +1,71 @@
+/* Style examen : sobre, professionnel */
+body {
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Valeurs pré-remplies */
+.given {
+    background-color: #e9ecef;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Champs de saisie dans les tableaux */
+table input[type="text"] {
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+    text-align: center;
+    padding: 4px 6px;
+    font-size: 0.9rem;
+}
+
+table input[type="text"]:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Tableau d'exercice */
+.table-quiz th {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-quiz td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Barre de navigation */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Page d'accueil */
+.accueil-card {
+    max-width: 450px;
+    margin: 3rem auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        font-size: 0.85rem;
+    }
+
+    table input[type="text"] {
+        font-size: 0.8rem;
+        padding: 3px 4px;
+    }
+
+    .navbar-brand {
+        font-size: 0.95rem;
+    }
+}

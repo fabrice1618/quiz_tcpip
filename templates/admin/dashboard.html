@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Tableau de bord</h2>
+    <a href="{{ url_for('admin.logout') }}" class="btn btn-outline-secondary btn-sm">Déconnexion</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Quiz</th>
+                <th>Description</th>
+                <th class="text-center">Mode</th>
+                <th class="text-center">État</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quiz in quizzes %}
+            <tr>
+                <td><strong>{{ quiz.titre }}</strong></td>
+                <td class="text-muted">{{ quiz.description }}</td>
+                <td class="text-center">
+                    {% if quiz.mode == "test" %}
+                    <span class="badge bg-warning text-dark">Test</span>
+                    {% else %}
+                    <span class="badge bg-info text-dark">Entraînement</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if quiz.mode == "test" %}
+                        {% if quiz.ouvert %}
+                        <span class="badge bg-success">Ouvert</span>
+                        {% else %}
+                        <span class="badge bg-danger">Fermé</span>
+                        {% endif %}
+                    {% else %}
+                    <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <form method="POST" action="{{ url_for('admin.toggle', quiz_id=quiz.id, action='mode') }}" class="d-inline">
+                        {% if quiz.mode == "test" %}
+                        <button type="submit" class="btn btn-sm btn-outline-info">Passer en entraînement</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-sm btn-outline-warning">Passer en test</button>
+                        {% endif %}
+                    </form>
+                    {% if quiz.mode == "test" %}
+                    <form method="POST" action="{{ url_for('admin.toggle', quiz_id=quiz.id, action='ouvert') }}" class="d-inline ms-1">
+                        {% if quiz.ouvert %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Fermer</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-sm btn-outline-success">Ouvrir</button>
+                        {% endif %}
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

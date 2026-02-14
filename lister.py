@@ -1,31 +1,29 @@
 #!/usr/bin/env python3
-"""Lister toutes les soumissions des deux quiz."""
+"""Lister toutes les soumissions des quiz."""
 
 import json
 import os
 import sqlite3
 import sys
+from datetime import datetime
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-
-QUIZ = [
-    ("binaire", os.path.join(BASE, "quiz_binaire", "resultats.db")),
-    ("reseau",  os.path.join(BASE, "quiz_reseau",  "resultats.db")),
-]
-
-
-def charger(db_path):
-    if not os.path.exists(db_path):
-        return []
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    rows = conn.execute("SELECT donnees FROM resultats ORDER BY date").fetchall()
-    conn.close()
-    return [json.loads(row["donnees"]) for row in rows]
+DB_PATH = os.path.join(BASE, "data", "resultats.db")
 
 
 def main():
-    W_QUIZ, W_NOM, W_PRE, W_CODE, W_DATE, W_SCORE = 8, 14, 14, 6, 19, 7
+    if not os.path.exists(DB_PATH):
+        print(f"Base introuvable : {DB_PATH}", file=sys.stderr)
+        sys.exit(1)
+
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(
+        "SELECT quiz_id, donnees FROM resultats ORDER BY quiz_id, date"
+    ).fetchall()
+    conn.close()
+
+    W_QUIZ, W_NOM, W_PRE, W_CODE, W_DATE, W_SCORE = 8, 14, 14, 6, 16, 7
 
     print(
         f"  {'Quiz':<{W_QUIZ}} {'Nom':<{W_NOM}} {'Prénom':<{W_PRE}} "
@@ -37,16 +35,16 @@ def main():
     )
 
     total = 0
-    for nom_quiz, path in QUIZ:
-        resultats = charger(path)
-        for r in resultats:
-            sc = r.get("score_total", {})
-            score = f"{sc.get('correct', '?')}/{sc.get('total', '?')}"
-            print(
-                f"  {nom_quiz:<{W_QUIZ}} {r['nom']:<{W_NOM}} {r['prenom']:<{W_PRE}} "
-                f"{r['code']:<{W_CODE}} {r['date']:<{W_DATE}} {score:>{W_SCORE}}"
-            )
-            total += 1
+    for row in rows:
+        r = json.loads(row["donnees"])
+        sc = r.get("score_total", {})
+        score = f"{sc.get('correct', '?')}/{sc.get('total', '?')}"
+        dt = datetime.fromisoformat(r["date"]).strftime("%d-%m-%Y %H:%M")
+        print(
+            f"  {row['quiz_id']:<{W_QUIZ}} {r['nom']:<{W_NOM}} {r['prenom']:<{W_PRE}} "
+            f"{r['code']:<{W_CODE}} {dt:<{W_DATE}} {score:>{W_SCORE}}"
+        )
+        total += 1
 
     print(f"\n  {total} soumission(s)")
 

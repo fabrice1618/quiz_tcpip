@@ -1,0 +1,49 @@
+/* Largeur adaptée aux adresses IP */
+input.input-ip {
+    width: 145px;
+    font-family: "Courier New", Courier, monospace;
+}
+
+/* En-têtes de communication (plus compacts) */
+.comm-header {
+    font-size: 0.8rem;
+    min-width: 70px;
+}
+
+/* Checkboxes communication */
+.table-quiz .form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    cursor: pointer;
+}
+
+/* --- Diagramme topologie SVG exercice 1 --- */
+.topo-svg {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+}
+
+/* --- Diagramme topologie SVG exercice 2 --- */
+.topo-svg-routing {
+    max-width: 700px;
+    width: 100%;
+    height: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    input.input-ip {
+        width: 120px;
+    }
+
+    .comm-header {
+        font-size: 0.7rem;
+        min-width: 55px;
+    }
+
+    .topo-svg,
+    .topo-svg-routing {
+        max-width: 100%;
+    }
+}

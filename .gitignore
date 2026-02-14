@@ -5,3 +5,4 @@ test_partie1_version3.pdf
 resultats.db
 resultats.db-wal
 resultats.db-shm
+.env

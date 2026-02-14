@@ -1,18 +1,11 @@
 services:
-  quiz-binaire:
+  quiz:
     build: .
-    container_name: quiz-binaire
+    container_name: quiz-tcpip
     volumes:
-      - ./quiz_binaire:/app
+      - ./data:/app/data
     ports:
-      - "5000:5000"
-    restart: unless-stopped
-
-  quiz-reseau:
-    build: .
-    container_name: quiz-reseau
-    volumes:
-      - ./quiz_reseau:/app
-    ports:
-      - "5001:5000"
+      - "80:5000"
+    env_file:
+      - .env
     restart: unless-stopped

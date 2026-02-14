@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Quiz disponibles</h2>
+
+<div class="row">
+    {% for quiz in quizzes %}
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ quiz.titre }}</h5>
+                <p class="card-text text-muted">{{ quiz.description }}</p>
+                <p class="mb-2">
+                    {% if quiz.mode == "test" %}
+                    <span class="badge bg-warning text-dark">Mode test</span>
+                    {% if quiz.ouvert %}
+                    <span class="badge bg-success">Ouvert</span>
+                    {% else %}
+                    <span class="badge bg-danger">Fermé</span>
+                    {% endif %}
+                    {% else %}
+                    <span class="badge bg-info text-dark">Entraînement</span>
+                    {% endif %}
+                </p>
+                <a href="{{ url_for(quiz.id ~ '.accueil') }}" class="btn btn-primary">Accéder</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

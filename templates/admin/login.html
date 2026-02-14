@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card accueil-card shadow-sm">
+    <div class="card-body">
+        <h2 class="card-title text-center mb-4">Administration</h2>
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form method="POST" action="{{ url_for('admin.login') }}">
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" class="form-control" id="password" name="password" required autofocus>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-dark">Connexion</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
