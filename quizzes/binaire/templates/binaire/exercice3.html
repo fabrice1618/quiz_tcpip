@@ -41,7 +41,7 @@
                                 <code>NOT {{ ex3_b }}</code><br>
                                 <input type="text" name="ex3_bw_not" class="input-bw"
                                    value="{{ reponses.get('ex3_bw_not', '') }}"
-                                   pattern="[01]{4} [01]{4}">
+                                   pattern="[01]{4} ?[01]{4}">
                             </div>
                         </div>
                     </div>
@@ -115,7 +115,7 @@
                                 <code>{{ op_name }} {{ ex3_b }}</code><br>
                                 <input type="text" name="ex3_bw_{{ op_id }}" class="input-bw"
                                        value="{{ reponses.get('ex3_bw_%s' % op_id, '') }}"
-                                       pattern="[01]{4} [01]{4}">
+                                       pattern="[01]{4} ?[01]{4}">
                             </div>
                         </div>
                     </div>
